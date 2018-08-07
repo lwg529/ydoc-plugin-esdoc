@@ -28,7 +28,7 @@ module.exports = {
     }
 }
 ```
-##esdoc 参考
+## esdoc 参考
 
 esdoc-feature: https://esdoc.org/manual/feature.html
 
