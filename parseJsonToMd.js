@@ -85,16 +85,37 @@ function buildMdContent(api) {
     return content.join('');
 }
 
-function buildMd () {
+// 递归删除文件夹
+function deleteAll(path) {
+    var files = [];
+    if(fs.existsSync(path)) {
+        files = fs.readdirSync(path);
+        files.forEach(function(file, index) {
+            var curPath = path + "/" + file;
+            if(fs.statSync(curPath).isDirectory()) { 
+                // 递归删除
+                deleteAll(curPath);
+            } else { 
+                // 删除文件
+                fs.unlinkSync(curPath);
+            }
+        });
+        fs.rmdirSync(path);
+    }
+};
+
+function buildMd (config) {
     // 从配置文件中生成json的路径
-    var esdocParh = path.join(__dirname, './.esdoc.json');
-    var esdocJson = JSON.parse(fs.readFileSync(esdocParh, 'utf-8'));
-    var docsPath = path.join(__dirname, esdocJson.destination);
+    // var esdocParh = path.join(__dirname, './.esdoc.json');
+    // var esdocJson = JSON.parse(fs.readFileSync(esdocParh, 'utf-8'));
+    var workPath = process.cwd();
+    var docsPath = path.join(workPath, config.destination);
+    // console.log('-------', docsPath);
     // 读取生成的json文件
     var jsonPath = path.join(docsPath, './index.json');
     var jsonFile = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
     // 生成docs的文件夹
-    var mdDocsPath = path.join(__dirname, './docs');
+    var mdDocsPath = path.join(workPath, './docs');
     if(!fs.existsSync(mdDocsPath)) {
         fs.mkdirSync(mdDocsPath)
         // console.log('------', mdDocsPath);
@@ -111,7 +132,7 @@ function buildMd () {
                 // 生成文件写入md文件
                 var content = buildMdContent(item);
                 var methodMdPath = path.join(
-                    __dirname,
+                    workPath,
                     './docs/' + fileName + '_' + methodName + '.md'
                 );
                 fs.writeFileSync(methodMdPath, content);
@@ -125,7 +146,7 @@ function buildMd () {
         }
     });
     for (var item in mdPathFile) {
-        var filePath = path.join(__dirname, './docs/' + item + '.md');
+        var filePath = path.join(workPath, './docs/' + item + '.md');
         if (!fs.existsSync(filePath)) {
             var content = [];
             content.push('# ' + item + '\n');
@@ -137,6 +158,9 @@ function buildMd () {
             console.log('生成 ' + filePath);
         }
     }
+    // 移除esdoc文件夹
+    // console.log('----docsPath', docsPath);
+    deleteAll(docsPath);
 
 }
 // buildMd()
