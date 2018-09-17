@@ -1,5 +1,5 @@
 {
-  "name": "ydoc-plugin-esdoc",
+  "name": "ydoc-plugin-esdoc-basic",
   "version": "1.0.0",
   "description": "ydoc plugin esdoc ",
   "main": "index.js",
