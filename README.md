@@ -47,3 +47,9 @@ esdoc-plugins: https://github.com/esdoc/esdoc-plugins
 @desc | 描述 
 @ignore| 忽略的注释
 @version | 开始支持的版本
+    
+```
+Button 按钮组件
+ * @param {boolean} [large=false] 大按钮 //参数类型是boolean， 默认值是false，非必填参数
+ * @param {string} label 显示的按钮名称  //类型是string， 必选参数，无默认值
+```
